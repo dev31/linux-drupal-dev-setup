@@ -1,0 +1,17 @@
+#!/bin/bash
+
+source "$(dirname "$0")/000-common"
+source "$(dirname "$0")/000-config"
+
+sudo apt install xclip
+
+if ssh-keygen
+then
+  if cat ~/.ssh/id_rsa.pub | xclip -sel clip
+  then
+    echo "Public key copied to buffer."
+  else
+    echo "Unable to copy public key into buffer!"
+    exit 1
+  fi
+fi

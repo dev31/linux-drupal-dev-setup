@@ -1,0 +1,23 @@
+#!/bin/bash
+
+source "$(dirname "$0")/000-common"
+source "$(dirname "$0")/000-config"
+
+if [ -f ~/.gitignore ]
+then
+  echo "Global .gitignore already exists."
+else
+  if ! patch -p1 -d ~ < "$DIR/020-git-gitignore.patch"
+  then
+    echo "Unable to patch .gitignore file!"
+    exit 1
+  fi
+fi
+
+sudo add-apt-repository ppa:git-core/ppa
+sudo apt update
+sudo apt install git
+
+git config --global user.email "$USER_MAIL"
+git config --global user.name "$USER_NAME_FULL"
+git config --global core.excludesfile "~/.gitignore"

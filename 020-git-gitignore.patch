@@ -1,0 +1,9 @@
+diff --git a/.gitignore b/.gitignore
+new file mode 100644
+index 0000000..0e24eea
+--- /dev/null
++++ b/.gitignore
+@@ -0,0 +1,3 @@
++# Global ignores
++
++.idea/

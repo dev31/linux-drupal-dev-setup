@@ -1,0 +1,46 @@
+#!/bin/bash
+
+source "$(dirname "$0")/000-common"
+source "$(dirname "$0")/000-config"
+
+if [ ! -f "$PHPSTORM_DIR/bin/phpstorm.sh" ]
+then
+  if [ ! -f ~/Downloads/PhpStorm-*.tar.gz ]
+  then
+    echo "Download PhpStorm."
+    xdg-open "https://www.jetbrains.com/phpstorm/download/#section=linux-version" >/dev/null
+
+    echo -n "Waiting..."
+    while [ ! -f ~/Downloads/PhpStorm-*.tar.gz ]
+    do
+      echo -n "."
+      sleep 5
+    done
+    # Finally echo the new line.
+    echo "."
+  fi
+
+  TMP=`mktemp -d`
+  for ARCHIVE in ~/Downloads/PhpStorm-*.tar.gz; do :; done
+  mv $ARCHIVE "$TMP/"
+  for ARCHIVE in "$TMP/PhpStorm-*.tar.gz"; do :; done
+
+  # Do not use quotes, so wildcard can be resolved.
+  if ! sudo tar xfz $ARCHIVE -C $TMP
+  then
+    echo "Unable to untar PhpStorm!"
+    exit 1
+  fi
+
+  rm $ARCHIVE
+
+  if ! sudo mv $TMP/PhpStorm-* $PHPSTORM_DIR
+  then
+    echo "Unable to move extracted PhpStorm folder to $PHPSTORM_DIR !"
+    exit 1
+  fi
+
+  rm -rf $TMP
+fi
+
+bash "$PHPSTORM_DIR/bin/phpstorm.sh"
