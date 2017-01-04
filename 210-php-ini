@@ -1,0 +1,33 @@
+#!/bin/bash
+
+source "$(dirname "$0")/000-common"
+source "$(dirname "$0")/000-config"
+
+cgr -o mikeshiyan/php-ini:@stable
+sudo ln -fs $CGR_BIN_DIR/php_ini /usr/local/bin/
+
+for VERSION in "5.6" "7.0"
+do
+  sudo php_ini -f/etc/php/$VERSION/cli/php.ini \
+    display_errors=1 display_startup_errors=1 track_errors=1 error_reporting=E_ALL \
+    post_max_size=128M upload_max_filesize=128M always_populate_raw_post_data=-1 \
+    mysqlnd.collect_memory_statistics=1 \
+    session.gc_probability=1 \
+    opcache.memory_consumption=128 opcache.interned_strings_buffer=8 \
+    opcache.max_accelerated_files=4000 opcache.revalidate_freq=60 \
+    opcache.fast_shutdown=1 opcache.enable_cli=1 \
+    date.timezone=UTC \
+    max_execution_time=0
+  sudo php_ini -f/etc/php/$VERSION/fpm/php.ini \
+    display_errors=1 display_startup_errors=1 track_errors=1 error_reporting=E_ALL \
+    post_max_size=128M upload_max_filesize=128M always_populate_raw_post_data=-1 \
+    mysqlnd.collect_memory_statistics=1 \
+    session.gc_probability=1 \
+    opcache.memory_consumption=128 opcache.interned_strings_buffer=8 \
+    opcache.max_accelerated_files=4000 opcache.revalidate_freq=60 \
+    opcache.fast_shutdown=1 opcache.enable_cli=1 \
+    date.timezone=UTC \
+    max_execution_time=300 memory_limit=512M
+
+  sudo systemctl reload php$VERSION-fpm
+done
