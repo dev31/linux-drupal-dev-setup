@@ -1,0 +1,14 @@
+#!/bin/bash
+
+source "$(dirname "$0")/000-common"
+source "$(dirname "$0")/000-config"
+
+# For future updates see https://hechoendrupal.gitbooks.io/drupal-console/content/en/getting/composer.html
+cgr -o --prefer-source drupal/console
+
+drupal init --override
+
+if ! grep -q "\$HOME/.console/console.rc" ~/.bashrc
+then
+  echo "source \"\$HOME/.console/console.rc\" 2>/dev/null" >> ~/.bashrc
+fi
