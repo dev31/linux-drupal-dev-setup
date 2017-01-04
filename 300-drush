@@ -1,0 +1,23 @@
+#!/bin/bash
+
+source "$(dirname "$0")/000-common"
+source "$(dirname "$0")/000-config"
+
+# For future updates see http://www.drush.org/en/master/install-alternative/
+cgr -o --prefer-source drush/drush
+
+if [ ! -f ~/.drush/drush.prompt.sh ]
+then
+  PATCH_DRUSH_PROMPT="1"
+fi
+
+drush init
+
+if [ "$PATCH_DRUSH_PROMPT" == "1" ]
+then
+  if ! patch -p1 -d ~/.drush < "$DIR/300-drush-prompt.patch"
+  then
+    echo "Unable to patch drush.prompt.sh file!"
+    exit 1
+  fi
+fi
