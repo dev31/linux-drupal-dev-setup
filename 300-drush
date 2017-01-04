@@ -21,3 +21,6 @@ then
     exit 1
   fi
 fi
+
+git clone https://github.com/mikeshiyan/password_generate.git ~/.drush/password_generate
+drush cache-clear drush
