@@ -1,0 +1,53 @@
+#!/bin/bash
+
+source "$(dirname "$0")/000-common"
+source "$(dirname "$0")/000-config"
+
+sudo apt install mono-complete
+sudo mkdir -p /usr/local/exe
+
+if [ ! -f "/usr/local/exe/hostscmd/hosts.exe" ]
+then
+  if [ ! -f ~/Downloads/hosts-*-bin.zip ]
+  then
+    echo "Download the latest stable BIN ZIP of HostsCmd."
+    xdg-open "https://code.google.com/archive/p/hostscmd/downloads" >/dev/null
+
+    echo -n "Waiting..."
+    while [ ! -f ~/Downloads/hosts-*-bin.zip ]
+    do
+      echo -n "."
+      sleep 5
+    done
+    # Finally echo the new line.
+    echo "."
+  fi
+
+  TMP=`mktemp -d`
+  for ARCHIVE in ~/Downloads/hosts-*-bin.zip; do :; done
+  mv $ARCHIVE "$TMP/"
+  for ARCHIVE in "$TMP/hosts-*-bin.zip"; do :; done
+
+  # Do not use quotes, so wildcard can be resolved.
+  if ! sudo unzip $ARCHIVE -d $TMP/hostscmd
+  then
+    echo "Unable to unzip HostsCmd!"
+    exit 1
+  fi
+
+  rm $ARCHIVE
+
+  if ! sudo mv $TMP/hostscmd /usr/local/exe/
+  then
+    echo "Unable to move extracted HostsCmd folder to /usr/local/exe/ !"
+    exit 1
+  fi
+
+  rm -rf $TMP
+fi
+
+if ! grep -q "hosts.exe" ~/.bashrc
+then
+  echo "" >> ~/.bashrc
+  echo "alias hosts='sudo mono /usr/local/exe/hostscmd/hosts.exe'" >> ~/.bashrc
+fi
