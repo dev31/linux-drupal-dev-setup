@@ -1,0 +1,17 @@
+#!/bin/bash
+
+source "$(dirname "$0")/000-common"
+source "$(dirname "$0")/000-config"
+
+# For future updates see https://www.drupal.org/node/1419988
+cgr -o --prefer-source drupal/coder:dev-8.x-2.x
+sudo git clone --branch master http://git.drupal.org/sandbox/coltrane/1921926.git /usr/local/src/drupalsecure
+
+phpcs --config-set installed_paths $CGR_BASE_DIR/drupal/coder/vendor/drupal/coder/coder_sniffer,/usr/local/src/drupalsecure
+
+if ! grep -q "drupalcs" ~/.bashrc
+then
+  echo "" >> ~/.bashrc
+  echo "alias drupalcs='phpcs --standard=Drupal,DrupalPractice,DrupalSecure --extensions=php,module,inc,install,test,profile,theme,js,css,md,info,txt,yml'" >> ~/.bashrc
+  echo "alias drupalcbf='phpcbf --standard=Drupal,DrupalPractice,DrupalSecure --extensions=php,module,inc,install,test,profile,theme,js,css,md,info,txt,yml'" >> ~/.bashrc
+fi
