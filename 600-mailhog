@@ -1,0 +1,51 @@
+#!/bin/bash
+
+source "$(dirname "$0")/000-common"
+source "$(dirname "$0")/000-config"
+
+if [ ! -f "/usr/local/bin/mailhog" ]
+then
+  if [ ! -f ~/Downloads/MailHog_linux_amd64 ]
+  then
+    echo "Download the latest compiled MailHog."
+    xdg-open "https://github.com/mailhog/MailHog/releases" >/dev/null
+
+    echo -n "Waiting..."
+    while [ ! -f ~/Downloads/MailHog_linux_amd64 ]
+    do
+      echo -n "."
+      sleep 5
+    done
+    # Finally echo the new line.
+    echo "."
+  fi
+
+  if ! sudo mv ~/Downloads/MailHog_linux_amd64 /usr/local/bin/mailhog
+  then
+    echo "Unable to move MailHog to /usr/local/bin/ !"
+    exit 1
+  fi
+fi
+
+if ! chmod +x /usr/local/bin/mailhog
+then
+  echo "Unable to chmod +x MailHog!"
+  exit 1
+fi
+
+sudo cp -f "$DIR/600-mailhog-unit.service" /etc/systemd/system/mailhog.service
+sudo systemctl enable mailhog.service
+sudo systemctl daemon-reload
+sudo systemctl restart mailhog.service
+
+for VERSION in "5.6" "7.0"
+do
+  for SAPI in "cli" "fpm"
+  do
+    sudo php_ini -f/etc/php/$VERSION/$SAPI/php.ini sendmail_path="/usr/local/bin/mailhog sendmail mail@localhost"
+  done
+
+  sudo systemctl reload php$VERSION-fpm
+done
+
+xdg-open "http://localhost:8025" >/dev/null
