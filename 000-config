@@ -3,6 +3,6 @@
 USER_MAIL=""
 USER_NAME_FULL=""
 
-PHP_VERSIONS=("7.0" "5.6")
+PHP_VERSIONS=("7.1" "7.0" "5.6")
 
 PHPSTORM_DIR="/opt/phpstorm"
