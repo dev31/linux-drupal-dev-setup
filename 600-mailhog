@@ -38,7 +38,7 @@ sudo systemctl enable mailhog.service
 sudo systemctl daemon-reload
 sudo systemctl restart mailhog.service
 
-for VERSION in "5.6" "7.0"
+for VERSION in ${PHP_VERSIONS[@]}
 do
   for SAPI in "cli" "fpm"
   do
