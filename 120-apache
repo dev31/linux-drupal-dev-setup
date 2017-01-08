@@ -12,7 +12,7 @@ sudo a2enmod headers rewrite proxy_fcgi setenvif
 sudo a2enconf php${PHP_VERSIONS[0]}-fpm
 sudo systemctl restart apache2
 
-sudo mkdir /srv/http
+sudo mkdir -p $SITES_DIR
 sudo adduser $USER www-data
-sudo chown $USER:www-data /srv/http
-sudo chmod g+s /srv/http
+sudo chown $USER:www-data $SITES_DIR
+sudo chmod g+s $SITES_DIR
