@@ -1,0 +1,21 @@
+#!/bin/bash
+
+source "$(dirname "$0")/000-common"
+source "$(dirname "$0")/000-config"
+
+sudo mkdir -p $SITES_DIR
+sudo adduser $USER www-data
+sudo chown $USER:www-data $SITES_DIR
+sudo chmod g+s $SITES_DIR
+
+sudo mkdir -p /etc/ensite
+sudo cp -f "$DIR/900-sites-vhost.conf" /etc/ensite/vhost.conf.template
+
+sudo cp -f "$DIR/900-sites-ensite.sh" /usr/local/bin/ensite
+sudo cp -f "$DIR/900-sites-dissite.sh" /usr/local/bin/dissite
+sudo chmod +x /usr/local/bin/ensite
+sudo chmod +x /usr/local/bin/dissite
+
+echo "Commands ensite and dissite are registered in the system. Usage example:"
+echo "  ensite my_site"
+echo "  dissite my_other_site"

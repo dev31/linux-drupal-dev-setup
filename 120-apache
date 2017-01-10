@@ -11,8 +11,3 @@ sudo a2enmod headers rewrite proxy_fcgi setenvif
 # @TODO FPM for other PHP versions and per-VHost.
 sudo a2enconf php${PHP_VERSIONS[0]}-fpm
 sudo systemctl restart apache2
-
-sudo mkdir -p $SITES_DIR
-sudo adduser $USER www-data
-sudo chown $USER:www-data $SITES_DIR
-sudo chmod g+s $SITES_DIR
