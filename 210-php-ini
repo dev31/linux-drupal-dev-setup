@@ -27,7 +27,8 @@ do
     opcache.max_accelerated_files=4000 opcache.revalidate_freq=60 \
     opcache.fast_shutdown=1 opcache.enable_cli=1 \
     date.timezone=UTC \
-    max_execution_time=300 memory_limit=512M
+    max_execution_time=300 memory_limit=512M \
+    xdebug.remote_enable=1
 
   sudo systemctl reload php$VERSION-fpm
 done

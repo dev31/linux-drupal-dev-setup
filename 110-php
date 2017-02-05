@@ -12,4 +12,4 @@ do
                    php$VERSION-mbstring php$VERSION-mysql php$VERSION-xml
 done
 
-sudo apt install php-pear php-uploadprogress
+sudo apt install php-pear php-uploadprogress php-xdebug
