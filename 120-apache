@@ -7,7 +7,7 @@ sudo add-apt-repository ppa:ondrej/apache2
 sudo apt update
 sudo apt install apache2
 
-sudo a2enmod headers rewrite proxy_fcgi setenvif
+sudo a2enmod headers rewrite proxy_fcgi setenvif ssl
 # @TODO FPM for other PHP versions and per-VHost.
 sudo a2enconf php${PHP_VERSIONS[0]}-fpm
 sudo systemctl restart apache2
